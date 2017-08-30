@@ -1,114 +1,108 @@
-Prob.js ![bower](https://img.shields.io/bower/v/prob.js.svg) [![npm](https://img.shields.io/npm/v/prob.js.svg)](https://www.npmjs.com/package/prob.js) [![LICENSE](https://img.shields.io/npm/l/prob.js.svg)](https://raw.githubusercontent.com/bramp/prob.js/master/LICENSE)
+Prob.ts
 =======
-by [Andrew Brampton](https://bramp.net) 2016
+A TypeScript port of [prob.js](https://github.com/bramp/prob.js) by [Andrew Brampton](https://bramp.net).
 
-Generate random numbers from different probability distributions. [Demo](https://bramp.github.io/prob.js/).
+Generates random numbers from the following probability distributions:
 
+ - Uniform distribution
+ - Normal distribution
+ - Exponential distribution
+ - Log-normal distribution
 
-Use
----
+Usage
+-----
 
-**Bower**:
-```shell
-bower install prob.js
+Install the package through the method of your choice, e.g. `npm install prob.js`
+
+Instantiate `Prob`, optionally passing in a random number generator:
+
+```javascript
+const prob = new ProbTS.Prob();      // defaults to Math.random
 ```
 
-```html
-<script src="bower_components/random/lib/random.min.js" type="text/javascript" ></script>
-<script src="bower_components/prob.js/dist/prob-min.js" type="text/javascript" ></script>
+### Generating distribution models
+
+Generate a random value from a uniform distribution with _min = 0_ and _max = 1_:
+
+```javascript
+const uniform = prob.uniform(0, 1);
+const value = uniform.random();
 ```
 
-**Node.js**:
-```shell
-npm install prob.js
+Generate a random value from a normal distribution with _μ = 0_ and _σ = 1_:
+
+```javascript
+const normal = prob.normal(0, 1);
+const value = normal.random();
 ```
 
-```js
-var Prob = require('prob.js');
+Generate a random value from an exponential distribution with _λ = 1_:
+
+```javascript
+const exponential = prob.exponential(1);
+const value = exponential.random();
 ```
 
-**Example**:
-```js
-var r = Prob.normal(0, 1.0); // μ = 0, σ = 1.0 
-r(); // Returns a random number from this distribution
-r(); // Returns another random number
-r(); // and again
+Generate a random value from an log-normal distribution with _μ = 0_ and _σ = 1_:
+
+```javascript
+const logNormal = prob.logNormal(0, 1);
+const value = logNormal.random();
+```
+
+Generate a random value from an Poisson distribution with _λ = 1_:
+
+```javascript
+const poisson = prob.poisson(1);
+const value = poisson.random();
 ```
 
 API
 ---
 
-The following distribution are available:
+The following distributions are available:
 
-```js
-Prob.uniform(min, max) // Uniform distribution in range [min, max).
-Prob.normal(μ, σ)      // Normal distribution with mean and standard deviation.
-Prob.exponential(λ)    // Exponential distribution with lambda.
-Prob.lognormal(μ, σ)   // Log-normal distribution defined as ln(normal(μ, σ)).
-Prob.poisson(λ)        // Poisson distribution returning integers >= 0.
-Prob.zipf(s, N)        // Zipf's distribution returning integers in range [1, N].
+```javascript
+prob.uniform(min, max); // Uniform distribution in range [min, max).
+prob.normal(μ, σ);      // Normal distribution with mean and standard deviation.
+prob.exponential(λ);    // Exponential distribution with lambda.
+prob.logNormal(μ, σ);   // Log-normal distribution defined as ln(normal(μ, σ)).
+prob.poisson(λ);        // Poisson distribution returning integers >= 0.
 ```
 
 After generating a distribution, the following methods are available:
 
-```js
-var r = Prob.exponential(1.0); // Create a distribution.
-r()        // Generates a number within the distribution.
-r(src)     // Generates a number using a `src` of random numbers. (See note below.)
-r.Min      // The min random number which could be returned by `r()` (inclusive).
-r.Max      // The max random number which could be returned by `r()` (exclusive).
-r.Mean     // The expected mean for this distribution.
-r.Variance // The expected variance for this distribution.
+```javascript
+const r = prob.exponential(1); // Create a distribution.
+r.random();   // Generates a number within the distribution.
+r.min;        // The min random number which could be returned by `r()` (inclusive).
+r.max;        // The max random number which could be returned by `r()` (exclusive).
+r.mean;       // The expected mean for this distribution.
+r.variance;   // The expected variance for this distribution.
 ```
 
-Random source
--------------
+Credit
+------
 
-Internally Prob.js uses Mersenne Twister provided by [random-js](https://github.com/ckknight/random-js). This can be overridden by providing the `src` argument when generating a number. `src` is expected to be a function that when called returns a signed integer uniformly in the range [-2^31,2^31).
+This package is identical to [prob.js](https://github.com/bramp/prob.js) by [Andrew Brampton](https://bramp.net) with 
+the following differences:
 
-For example:
+ - Zipf distribution was removed as it was not completely implemented.
+ - Compiles to plain ES6 an can be loaded using UMD. No assumptions about the run-time environment are made.
+ - Expects only a `[0, 1)` random number generator as input (defaults to `Math.random`) .
 
-```js
-// https://xkcd.com/221/
-function xkcd_source() {
-	return 4; // chosen by fair dice roll.
-	          // guaranteed to be random.
-};
+To-do
+-----
 
-var r = Prob.exponential(1.0); // Create a distribution.
-
-// Use the XKCD source
-console.log( r(xkcd_source) );
-
-// Or use a better source (supplied by random-js)
-console.log( r(Random.engines.browserCrypto) );
-
-// Or just use the default which happens to be Random.engines.mt19937().autoSeed()
-console.log( r() );
-```
-
-How to release
---------------
-
-```shell
-make clean && make   # Build and test once
-mversion patch       # Bump version number (v1.2.3 | major | minor | patch)
-make clean && make   # Be extra sure after the version bump it continues to work
-
-git add -f bower.json package.json dist/{prob-min.js,prob-min.js.map,prob.js}
-VERSION=v`mversion | tail -n 1 | cut -d ' ' -f 2`
-git commit -m "Releasing version $VERSION"
-git tag $VERSION
-git push origin
-git push origin --tags
-
-npm publish          # Publish to npm (publishing to bower is not needed)
-```
+ - Poisson distribution should pick from a `[0,1]` not `[0,1)` interval
+ - Add more distributions
+    - Zipf
+    - Pareto
+    - Weibull
 
 Licence (Apache 2)
 ------------------
-*This is not an official Google product (experimental or otherwise), it is
-just code that happens to be owned by Google.*
+This is not an official Google product (experimental or otherwise), it is just code that happens to be owned by Google.
 
 ```
 Copyright 2016 Google Inc. All Rights Reserved.

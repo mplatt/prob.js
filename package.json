@@ -1,42 +1,22 @@
 {
-  "author": "Andrew Brampton <github@bramp.net>",
-  "bugs": {
-    "url": "https://github.com/bramp/prob.js/issues"
-  },
-  "dependencies": {
-    "random-js": "1.0.x"
-  },
-  "description": "Generate random numbers from different probability distributions.",
-  "devDependencies": {
-    "bower": "1.7.x",
-    "jshint": "2.9.x",
-    "jsonlint": "1.6.x",
-    "jscs": "^2.11.0",
-    "mversion": "1.10.x",
-    "qunit": "0.9.x",
-    "random-js": "1.0.x",
-    "uglify-js": "2.6.x",
-    "requirejs": "2.2.x"
-  },
-  "homepage": "https://github.com/bramp/prob.js#readme",
-  "keywords": [
-    "random",
-    "probability",
-    "distributions",
-    "normal",
-    "lognormal",
-    "exponential",
-    "zipf"
-  ],
+  "name": "prob.ts",
+  "version": "2.0.0",
+  "description": "Generates random numbers from different probability distributions",
+  "main": "./prob.js",
+  "types": "./prob.d.ts",
+  "repository": "git@github.com:mplatt/prob.ts.git",
+  "author": "Moritz Platt <mplatt02@mail.bbk.ac.uk>",
   "license": "Apache-2.0",
-  "main": "dist/prob.js",
-  "name": "prob.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bramp/prob.js.git"
-  },
   "scripts": {
-    "test": "make test"
+    "test": "mocha prob-tests.js --timeout 600000",
+    "build": "tslint -c tslint.json prob.ts && tsc --declaration && yarn run test"
   },
-  "version": "1.0.6"
+  "devDependencies": {
+    "@types/chai": "4.0.*",
+    "@types/mocha": "*",
+    "chai": "4.0.*",
+    "mocha": "3.*.*",
+    "tslint": "5.*.*",
+    "typescript": "2.*.*"
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "charset": "utf8",
+    "forceConsistentCasingInFileNames": true,
+    "locale": "en-uk",
+    "target": "ES6",
+    "module": "UMD",
+    "newLine": "lf",
+    "preserveConstEnums": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "outDir": "./"
+  },
+  "files": [
+    "./prob.ts",
+    "./prob-tests.ts"
+  ]
+}
